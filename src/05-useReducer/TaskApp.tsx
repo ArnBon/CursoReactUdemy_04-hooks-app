@@ -1,4 +1,4 @@
-import { useReducer, useState } from 'react';
+import { useEffect, useReducer, useState } from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -18,6 +18,11 @@ export const TaskApp = () => {
   // const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState('');
   const [state, dispatch] = useReducer(taskReducer, getTaskInitialState());
+
+  //para la persistencia 
+  useEffect(()=> {
+    localStorage.setItem('tasks-state', JSON.stringify(state));
+  }, [state]);
 
   const addTodo = () => {
         // Evitamos agregar tareas vacías o con puros espacios en blanco
