@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useReducer, useState } from 'react';
 
 import { Plus, Trash2, Check } from 'lucide-react';
 
@@ -6,6 +6,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { getTaskInitialState, taskReducer } from './reducer/taskReducer';
 
 interface Todo {
   id: number;
@@ -14,56 +15,39 @@ interface Todo {
 }
 
 export const TaskApp = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  // const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState('');
+  const [state, dispatch] = useReducer(taskReducer, getTaskInitialState());
 
   const addTodo = () => {
         // Evitamos agregar tareas vacías o con puros espacios en blanco
     if(inputValue.length === 0) return;
-
-    const newTodo: Todo = {
-      id: Date.now(),
-      text: inputValue.trim(),
-      completed: false,
-    };
-    // Agregamos la nueva tarea respetando la inmutabilidad
-    setTodos([ ... todos, newTodo]);
-    //setTodos((prev) => [...prev, newTodo]);
-
+    dispatch({ type: 'ADD_TODO', payload: inputValue });
     // Limpiamos el input
     setInputValue('');
-    // console.log('Agregar tarea:', inputValue);
+    
   };
 /*Fin addTodo**/
   //La barra de progreso de las tareas 
   const toggleTodo = (id: number) => {
-    const updateTodos = todos.map( (todo) => {
-      if(todo.id === id) {
-        return { ... todo, completed: !todo.completed };
-      }
-      return todo;
-    });
-    setTodos(updateTodos);
+    dispatch({ type: 'TOGGLE_TODO', payload: id});    
   };
   /** fin toggleTodo */
 
   const deleteTodo = (id: number) => {
-    const updateTodos = todos.filter( (todo) => todo.id !== id);
-    setTodos(updateTodos);
-    
-
+    dispatch({ type: 'DELETE_TODO', payload: id});
   };
   /** Fin deleteTodo*/
 
   const handleKeyPress = (e: React.KeyboardEvent) => {
-    console.log('Presiono enter');
-
+    if (e.key === 'Enter') {
+      addTodo();
+    }
   };
   /** Fin handleKeyPress */
-
-  const completedCount = todos.filter((todo) => todo.completed).length;
-  const totalCount = todos.length;
-
+  const { todos, completed: completedCount, length: totalCount } = state;
+  // const completedCount = todos.filter((todo) => todo.completed).length;
+  // const totalCount = todos.length;
   return (
     <div className="min-h-screen bg-linear-to-br from-slate-50 to-slate-100 p-4">
       <div className="mx-auto max-w-2xl">
