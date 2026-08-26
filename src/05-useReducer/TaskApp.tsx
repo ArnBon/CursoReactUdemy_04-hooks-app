@@ -17,7 +17,7 @@ interface Todo {
 export const TaskApp = () => {
   // const [todos, setTodos] = useState<Todo[]>([]);
   const [inputValue, setInputValue] = useState('');
-  const [state, dispatch] = useReducer(taskReducer, getTaskInitialState());
+  const [state, dispatch] = useReducer(taskReducer, undefined, getTaskInitialState);
 
   //para la persistencia 
   useEffect(()=> {
