@@ -1,4 +1,5 @@
 import { useOptimistic, useRef, useState, useTransition } from 'react';
+import { toast } from 'sonner'
 
 
 interface Comment {
@@ -41,23 +42,32 @@ export const InstagromApp = () => {
     addOptimisticComment(messageText);
 
     startTransition(async () => {
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+      
       console.log('Nuevo comentario', messageText);    
       console.log('servidor respondió');
       console.log('Id: ', nextId );
       
-      setComments((prev) => [
-          ...prev,
-          {
-              id: nextId.current++,
-              text: messageText,
-          },
-      ]);
+      // setComments((prev) => [
+      //     ...prev,
+      //     {
+      //         id: nextId.current++,
+      //         text: messageText,
+      //     },
+      // ]);
 
+      //codigo para revertir el proceso
+      setComments( (prev) => prev);
+      toast( 'Error al agregar el comentario', {
+        description: 'Intente nuevamente',
+        duration: 10_000,
+        position: 'top-right',
+        action: {
+          label: 'Cerrar',
+          onClick: () => toast.dismiss(),
+        },
+      });
     });
-
-
-
   };
 
   return (
