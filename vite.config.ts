@@ -5,15 +5,14 @@ import tailwindcss from '@tailwindcss/vite'
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [react(), tailwindcss(),],
-   resolve: {
+  plugins: [react(), tailwindcss()],
+  resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
-      react: path.resolve(__dirname, './node_modules/react'),
-      'react-dom': path.resolve(__dirname, './node_modules/react-dom'),
+      "@": path.resolve(import.meta.dirname, "./src"),      
     },
+    dedupe: ['react', 'react-dom'], 
+  },
+  optimizeDeps: {
+    include: ['react', 'react-dom', 'react/jsx-runtime', 'react-dom/client'],
   },
 })
-
-
-
