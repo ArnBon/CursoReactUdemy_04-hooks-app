@@ -13,7 +13,7 @@ export const getUserAction = async (id: number) => {
 
     return {
         id: id,
-        name: 'Arnaldo J. Bonillo B.',
+        name: 'Arnaldo José Bonillo Berrios',
         location: 'Caracas, Venezuela',
         role: 'Ingeniero en Informática',
     };
