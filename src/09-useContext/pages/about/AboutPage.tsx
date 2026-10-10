@@ -16,7 +16,9 @@ const { user, isAuthenticated, logout } = use(UserContext);
         <Button variant="destructive" className='mt-4' onClick={logout}>Salir</Button>
         </>
       ) : (
-        <p>Iniciar sesión</p>
+        <Link to="/login" className="hover:text-blue-500 underline text-2xl">
+            Iniciar sesión
+          </Link>
       )}
       {isAuthenticated && (
         <div>

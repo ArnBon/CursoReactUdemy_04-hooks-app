@@ -1,4 +1,4 @@
-import { appRouter } from '@/router/app.router'
+import { appRouter } from '@/09-useContext/router/app.router'
 import { RouterProvider } from 'react-router'
 import { UserContextProvider } from '@/09-useContext/context/UserContext';
 
