@@ -1,6 +1,7 @@
-import React, { createContext, useState } from 'react'
+import React, { createContext, useEffect, useState } from 'react'
 
 import { users, type User } from '../data/user-mock.data';
+import type { LogOut } from 'lucide-react';
 
 
 
@@ -41,10 +42,11 @@ export const UserContextProvider: FC<PropsWithChildren> = ({ children }) => {
 export type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated'
 
 // Interfaz que define las propiedades y métodos del contexto
-export interface UserContextProps {
+interface UserContextProps {
   // Estado
   authStatus: AuthStatus;
   user: User | null;
+  isAuthenticated: boolean;
 
   // Métodos
 login:(userId: number) => boolean;
@@ -63,37 +65,44 @@ export const UserContextProvider = ( {children }: { children: React.ReactNode })
   const [ user, setUser ] = useState<User | null>(null);
 
 
-  // Funciones / Handlers para las acciones
-  const handleLogin = (userId: number): boolean => {
-    // Búsqueda del usuario en mockData
-    const user = users.find( (user) => user.id === userId);
-
+  
+  const handleLogin = (userId: number) => {    
+    const user = users.find( (user) => user.id === userId);    
     if (!user) {
       console.log('User not found ${userId}');
       setUser(null);
       setAuthStatus('not-authenticated');
       return false;     
     }
-    // Si se encuentra el usuario
+    
     setUser(user);
     setAuthStatus('authenticated');
+    localStorage.setItem('userId', userId.toString());
     return true;
   };
 
-  const handleLogout = (): void => {
-    // Lógica de logout
+  
+  const handleLogout = () => {  
     setAuthStatus('not-authenticated');
     setUser(null);
+    localStorage.removeItem('userId');
   };
 
-
-
-  return (
-   // Sintaxis simplificada en React 19+ (sin .Provider)
+  useEffect(() => {
+    const storedUserId = localStorage.getItem('userId');   
+    if (storedUserId) {
+      handleLogin(+storedUserId);
+      return;
+    }
+    handleLogout();
+  }, []); 
+  return (   
     <UserContext
       value={{
-        authStatus,
-        user,
+        authStatus:authStatus,
+        isAuthenticated: authStatus === 'authenticated',
+        user: user,
+
         login: handleLogin,
         logout: handleLogout,
       }}
@@ -101,7 +110,7 @@ export const UserContextProvider = ( {children }: { children: React.ReactNode })
       {children}
     </UserContext>
   )
-}
+};
 
 
 

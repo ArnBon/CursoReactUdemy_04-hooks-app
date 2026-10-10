@@ -1,10 +1,10 @@
 import { UserContext } from '@/09-useContext/context/UserContext';
 import { Button } from '@/components/ui/button';
-import { useContext } from 'react';
+import { use } from 'react';
 
 
 export const ProfilePage = () => {
-  const {user} = useContext(UserContext);
+  const {user, logout} = use(UserContext);
 
 
   return (
@@ -15,7 +15,7 @@ export const ProfilePage = () => {
         { JSON.stringify(user, null, 2) }
       </pre>
 
-      <Button variant="destructive">
+      <Button variant="destructive" onClick={logout}>
         Salir
       </Button>
     </div>     
