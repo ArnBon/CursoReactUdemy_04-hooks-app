@@ -1,6 +1,6 @@
 import React, { createContext, useState } from 'react'
 
-import type { User } from '../data/user-mock.data';
+import { users, type User } from '../data/user-mock.data';
 
 
 
@@ -65,11 +65,23 @@ export const UserContextProvider = ( {children }: { children: React.ReactNode })
 
   // Funciones / Handlers para las acciones
   const handleLogin = (userId: number): boolean => {
-    console.log(userId);
+    // Búsqueda del usuario en mockData
+    const user = users.find( (user) => user.id === userId);
+
+    if (!user) {
+      console.log('User not found ${userId}');
+      setUser(null);
+      setAuthStatus('not-authenticated');
+      return false;     
+    }
+    // Si se encuentra el usuario
+    setUser(user);
+    setAuthStatus('authenticated');
     return true;
   };
 
   const handleLogout = (): void => {
+    // Lógica de logout
     setAuthStatus('not-authenticated');
     setUser(null);
   };
