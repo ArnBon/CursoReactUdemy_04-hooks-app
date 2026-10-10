@@ -1,4 +1,8 @@
-import React, { useState } from 'react'
+import React, { createContext, useState } from 'react'
+
+import type { User } from '../data/user-mock.data';
+
+
 
 /*
 Alternativas para el Tipado de children en TypeScript
@@ -33,14 +37,57 @@ export const UserContextProvider: FC<PropsWithChildren> = ({ children }) => {
 */
 
 
-export const UserContextProvider = ( {children }: any) => {
-    const [name, setName] = useState('Arnaldo');
+// Tipo para el estado de autenticación
+export type AuthStatus = 'checking' | 'authenticated' | 'not-authenticated'
+
+// Interfaz que define las propiedades y métodos del contexto
+export interface UserContextProps {
+  // Estado
+  authStatus: AuthStatus;
+  user: User | null;
+
+  // Métodos
+login:(userId: number) => boolean;
+logout: () => void;
+}
+
+// Creación del contexto usando el genérico y type assertion en TypeScript
+export const UserContext = createContext<UserContextProps>({} as UserContextProps);
+
+
+
+
+export const UserContextProvider = ( {children }: { children: React.ReactNode }) => {
+  //Piezas de estado
+  const [ authStatus, setAuthStatus ] = useState<AuthStatus>('checking');
+  const [ user, setUser ] = useState<User | null>(null);
+
+
+  // Funciones / Handlers para las acciones
+  const handleLogin = (userId: number): boolean => {
+    console.log(userId);
+    return true;
+  };
+
+  const handleLogout = (): void => {
+    setAuthStatus('not-authenticated');
+    setUser(null);
+  };
+
+
 
   return (
-    <div>
-        <h1>Comunicación desde UserContextProvider</h1>
-        {children}
-    </div>
+   // Sintaxis simplificada en React 19+ (sin .Provider)
+    <UserContext
+      value={{
+        authStatus,
+        user,
+        login: handleLogin,
+        logout: handleLogout,
+      }}
+    >
+      {children}
+    </UserContext>
   )
 }
 
