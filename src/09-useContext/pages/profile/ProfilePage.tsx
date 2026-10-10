@@ -15,7 +15,7 @@ export const ProfilePage = () => {
         { JSON.stringify(user, null, 2) }
       </pre>
 
-      <Button variant="destructive" onClick={logout}>
+      <Button variant="destructive" onClick={ logout }>
         Salir
       </Button>
     </div>     

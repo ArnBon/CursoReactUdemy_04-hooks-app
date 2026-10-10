@@ -1,22 +1,28 @@
 import { Link } from 'react-router';
 
-export const AboutPage = () => {
-  return (
-    <div className='bg-gradient flex flex-col items-center justify-center min-h-screen'>
-      <h1 className='text-4xl font-bold'>AboutPage</h1>
-      <hr />
-        <div className='flex flex-2 gap-2'>
-          {/* <link rel="stylesheet" href="" /> */}
-          <Link to="/profile" 
-          className='hover:text-blue-500 underline text-2xl'>
-              Perfil de Usuario
-          </Link>
+import { UserContext } from '@/09-useContext/context/UserContext';
+import { use } from 'react';
+import { Button } from '@/components/ui/button';
 
-          <Link to="/login" 
-          className='hover:text-blue-500 underline text-2xl'>
-              Iniciar Sesión
-          </Link>
-        </div>      
+export const AboutPage = () => {
+// Extracción de valores del contexto mediante la API 'use'
+const { user, isAuthenticated, logout } = use(UserContext);
+
+
+  return (   
+    <div className='bg-gradient flex flex-col items-center justify-center min-h-screen'>
+      {isAuthenticated ? (
+        <>
+        <Button variant="destructive" className='mt-4' onClick={logout}>Salir</Button>
+        </>
+      ) : (
+        <p>Iniciar sesión</p>
+      )}
+      {isAuthenticated && (
+        <div>
+          <h2>Perfil del usuario Activo</h2>
+        </div>
+      )}      
     </div>
-  );
+  );  
 };
